@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from flask_mysqldb import MySQL
 from users.views import users
 import mysql.connector as mysql
+from sshtunnel import SSHTunnelForwarder
 
 import pymysql
 
@@ -14,7 +15,26 @@ app.config.from_mapping(
     SQLALCHEMY_DATABASE_URI='mysql+pymysql://csc2033_team08:HumsBury7Pop@cs-db.ncl.ac.uk:3306/csc2033_team08',
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 )
+sql_hostname = 'cs-db.ncl.ac.uk'
+sql_username = 'csc2033_team08'
+sql_password = 'HumsBury7Pop'
+sql_main_database = 'csc2033_team08'
+sql_port = 3306
+ssh_host = 'linux.cs.ncl.ac.uk'
+ssh_user = 'c0046720'
+ssh_port = 22
+sql_ip = '127.0.0.1'
 
+with SSHTunnelForwarder(
+        (ssh_host, ssh_port),
+        ssh_username=ssh_user,
+        ssh_password="your_uni_password_here",
+        remote_bind_address=(sql_hostname, sql_port)) as tunnel:
+    conn = pymysql.connect(host='127.0.0.1', user=sql_username,
+            passwd=sql_password, db=sql_main_database,
+            port=tunnel.local_bind_port)
+    print(conn)
+    conn.close()
 db = SQLAlchemy(app)
 print(db)
 
