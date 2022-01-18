@@ -454,7 +454,7 @@ def create_students(group_id):
     """Allows for teachers to create student accounts, then will send the details to the
     teachers email address.
     """
-    form = RegisterStudent()
+    form = RegisterForm()
     teacher = Teacher.query.get(current_user.id)
     if form.validate_on_submit():
         # Takes the names and splits them by line

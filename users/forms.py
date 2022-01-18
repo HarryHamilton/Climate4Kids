@@ -25,7 +25,7 @@ class CreateGroup(FlaskForm):
 
 class RegisterForm(FlaskForm):
     # Adds validation to the user inputs
-    username = StringField(validators=[DataRequired()])
+    username = StringField(validators=[DataRequired(), name_check])
     email = StringField(validators=[DataRequired(), Email()])
     fullname = StringField(validators=[DataRequired(), name_check])
     password = PasswordField(
